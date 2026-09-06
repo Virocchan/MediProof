@@ -1,0 +1,76 @@
+:root {
+  /* Brand & Primary Theme (Warm Mauve/Rose from Reference UI) */
+  --accent-primary: #994d55;
+  --accent-primary-hover: #833e46;
+  --accent-primary-active: #6e3239;
+  --accent-light: #fbf0f1;
+  --accent-border: rgba(153, 77, 85, 0.2);
+  --accent-glow: rgba(153, 77, 85, 0.15);
+
+  /* Medical Trust & SDG 3 Colors */
+  --sdg3-green: #2d9d68;
+  --sdg3-green-light: #edf7f2;
+  --sdg3-green-border: rgba(45, 157, 104, 0.25);
+
+  /* Verdict Status Colors */
+  --verdict-true: #15803d;
+  --verdict-true-bg: #f0fdf4;
+  --verdict-true-border: #bbf7d0;
+  --verdict-true-text: #166534;
+
+  --verdict-false: #be123c;
+  --verdict-false-bg: #fff1f2;
+  --verdict-false-border: #fecdd3;
+  --verdict-false-text: #9f1239;
+
+  --verdict-misleading: #d97706;
+  --verdict-misleading-bg: #fffbeb;
+  --verdict-misleading-border: #fde68a;
+  --verdict-misleading-text: #92400e;
+
+  --verdict-unverified: #4f46e5;
+  --verdict-unverified-bg: #eef2ff;
+  --verdict-unverified-border: #c7d2fe;
+  --verdict-unverified-text: #3730a3;
+
+  /* Neutrals & Surfaces */
+  --bg-app: #f4f5f8;
+  --bg-card: #ffffff;
+  --bg-card-subtle: #fafbfd;
+  --bg-sidebar: #f8f9fc;
+  --bg-input: #f8f9fc;
+  --bg-hover: #f0f2f6;
+
+  /* Text Colors */
+  --text-primary: #17181c;
+  --text-secondary: #575a68;
+  --text-muted: #8b8f9e;
+  --text-inverse: #ffffff;
+
+  /* Borders & Dividers */
+  --border-light: rgba(0, 0, 0, 0.06);
+  --border-medium: rgba(0, 0, 0, 0.1);
+  --border-focus: rgba(153, 77, 85, 0.5);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-card: 0 4px 18px -2px rgba(18, 20, 24, 0.04), 0 2px 6px -1px rgba(18, 20, 24, 0.02);
+  --shadow-lg: 0 12px 32px -4px rgba(18, 20, 24, 0.08), 0 4px 12px -2px rgba(18, 20, 24, 0.03);
+  --shadow-modal: 0 20px 48px -8px rgba(18, 20, 24, 0.16);
+
+  /* Radii */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Spacing */
+  --sidebar-width: 250px;
+  --header-height: 70px;
+}
