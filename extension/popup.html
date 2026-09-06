@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediProof Extension</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="popup-wrapper">
+    <!-- Top Header -->
+    <header class="popup-header">
+      <div class="header-brand">
+        <div class="brand-shield">
+          <svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1 14.5l-3.5-3.5 1.41-1.41L11 13.67l5.09-5.09L17.5 10 11 16.5z"/></svg>
+        </div>
+        <div>
+          <div class="brand-name-row">
+            <span class="brand-title">MediProof</span>
+            <span class="badge-sdg">SDG 3</span>
+          </div>
+          <div class="brand-sub">Health Disinformation Guard</div>
+        </div>
+      </div>
+
+      <div class="header-tools">
+        <button id="btn-history" class="header-icon-btn" title="Recent Verifications">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </button>
+        <button id="btn-settings" class="header-icon-btn" title="Engine Settings">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Modality Tabs -->
+    <nav class="modality-tabs" id="modality-tabs">
+      <button class="tab-item active" data-modality="text">
+        <span class="tab-icon">📝</span>
+        <span>Text</span>
+      </button>
+      <button class="tab-item" data-modality="youtube">
+        <span class="tab-icon">🎥</span>
+        <span>YouTube</span>
+      </button>
+      <button class="tab-item" data-modality="voice">
+        <span class="tab-icon">🎙️</span>
+        <span>Voice</span>
+      </button>
+      <button class="tab-item" data-modality="photo">
+        <span class="tab-icon">📷</span>
+        <span>Photo</span>
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="popup-body">
+      <!-- 1. Text Tab View -->
+      <section class="tab-pane active" id="pane-text">
+        <div class="tab-quick-action">
+          <button id="btn-grab-selection" class="btn-subtle">
+            <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span>Grab highlighted text from page</span>
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label for="input-text-claim">Medical Claim or Social Post:</label>
+          <textarea id="input-text-claim" placeholder="Paste or type a health claim to cross-examine against WHO, CDC, FDA & MOH clinical registries..."></textarea>
+        </div>
+
+        <div class="presets-section">
+          <div class="presets-label">Sample Real-World Claims:</div>
+          <div class="presets-chips">
+            <button class="preset-chip" data-text="Cashew nuts contain high amounts of vitamin D3 and riboflavin that immediately cause dangerous blood clots in your veins.">🌰 Cashews & Blood Clots</button>
+            <button class="preset-chip" data-text="Drinking raw colloidal silver water completely eliminates viral lung infections and kills all pathogens in the bloodstream within 48 hours.">🧪 Colloidal Silver Cure</button>
+            <button class="preset-chip" data-text="Consuming 25 to 30 grams of natural dietary fiber daily helps regulate blood glucose spikes and lowers long-term risk of developing Type 2 Diabetes.">🥗 Dietary Fiber & Diabetes</button>
+          </div>
+        </div>
+
+        <button id="btn-verify-text" class="btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1 14.5l-3.5-3.5 1.41-1.41L11 13.67l5.09-5.09L17.5 10 11 16.5z"/></svg>
+          <span>Verify Claim with MediProof</span>
+        </button>
+      </section>
+
+      <!-- 2. YouTube Tab View -->
+      <section class="tab-pane" id="pane-youtube">
+        <div class="tab-quick-action">
+          <button id="btn-detect-youtube" class="btn-subtle">
+            <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span>Auto-detect current YouTube video</span>
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label for="input-yt-url">YouTube Video URL:</label>
+          <input type="url" id="input-yt-url" placeholder="https://www.youtube.com/watch?v=..." />
+        </div>
+
+        <div class="presets-section">
+          <div class="presets-label">Sample Health Videos:</div>
+          <div class="presets-chips">
+            <button class="preset-chip" data-yt="https://www.youtube.com/watch?v=d_k82X19k9a" data-title="Secret Miracle Drink That Dissolves Gallstones Overnight">🫒 Gallstone Olive Oil Flush</button>
+            <button class="preset-chip" data-yt="https://www.youtube.com/watch?v=WHO_Sodium_Guidelines_2025" data-title="Global Guidelines on Dietary Sodium and Hypertension">🧂 WHO Sodium Guidelines</button>
+          </div>
+        </div>
+
+        <button id="btn-verify-youtube" class="btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1 14.5l-3.5-3.5 1.41-1.41L11 13.67l5.09-5.09L17.5 10 11 16.5z"/></svg>
+          <span>Fact-Check YouTube Video</span>
+        </button>
+      </section>
+
+      <!-- 3. Voice Tab View -->
+      <section class="tab-pane" id="pane-voice">
+        <div class="voice-recorder-card">
+          <div class="mic-pulse-ring" id="mic-pulse">
+            <button id="btn-mic-toggle" class="btn-mic" title="Record Voice Memo">
+              <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+            </button>
+          </div>
+          <div class="recorder-status" id="recorder-status">Tap mic to record audio claim</div>
+          <div class="recorder-timer" id="recorder-timer">00:00</div>
+        </div>
+
+        <div class="form-group">
+          <label for="input-voice-url">Or Paste Audio / WhatsApp URL:</label>
+          <input type="url" id="input-voice-url" placeholder="https://example.com/voice_claim.mp3" />
+        </div>
+
+        <div class="presets-section">
+          <div class="presets-label">Sample Voice Memo:</div>
+          <div class="presets-chips">
+            <button class="preset-chip" data-voice="https://storage.googleapis.com/mediproof-demo/voice_herbal_diabetes_cure.mp3" data-title="WhatsApp Audio: Miracle Herbal Diabetes Remedy">📱 WhatsApp Voice Memo: Herbal Cure</button>
+          </div>
+        </div>
+
+        <button id="btn-verify-voice" class="btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1 14.5l-3.5-3.5 1.41-1.41L11 13.67l5.09-5.09L17.5 10 11 16.5z"/></svg>
+          <span>Analyze Voice Note</span>
+        </button>
+      </section>
+
+      <!-- 4. Photo Tab View -->
+      <section class="tab-pane" id="pane-photo">
+        <div class="form-group">
+          <label for="input-photo-url">Supplement Bottle or NPRA Label URL:</label>
+          <input type="url" id="input-photo-url" placeholder="https://example.com/supplement_label.jpg" />
+        </div>
+
+        <div class="file-drop-zone" id="file-drop-zone">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          <div class="drop-title">Drop supplement image or click to browse</div>
+          <div class="drop-sub">JPG, PNG, WebP up to 10MB</div>
+          <input type="file" id="file-input" accept="image/*" style="display:none;" />
+        </div>
+
+        <div class="image-preview-container" id="image-preview-container" style="display:none;">
+          <img id="image-preview" src="" alt="Selected label" />
+          <button id="btn-remove-image" class="btn-remove-preview">&times;</button>
+        </div>
+
+        <div class="presets-section">
+          <div class="presets-label">Sample Product Labels:</div>
+          <div class="presets-chips">
+            <button class="preset-chip" data-photo="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80" data-title="SlimExtreme 100% Herbal Fat Burner Bottle">💊 Unregistered Slimming Pill</button>
+          </div>
+        </div>
+
+        <button id="btn-verify-photo" class="btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1 14.5l-3.5-3.5 1.41-1.41L11 13.67l5.09-5.09L17.5 10 11 16.5z"/></svg>
+          <span>Scan Supplement & Label</span>
+        </button>
+      </section>
+
+      <!-- 5. Verification Result Display Pane -->
+      <section class="result-pane" id="pane-result" style="display:none;">
+        <div class="result-header">
+          <button id="btn-back-to-input" class="btn-subtle">
+            <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            <span>Verify Another</span>
+          </button>
+          <span class="claim-time" id="result-time"></span>
+        </div>
+
+        <div class="result-card">
+          <div class="result-claim-box" id="result-claim-text"></div>
+
+          <div class="result-verdict-bar" id="result-verdict-bar">
+            <div class="verdict-tag-wrapper">
+              <span id="result-verdict-icon"></span>
+              <span id="result-verdict-text">VERIFIED</span>
+            </div>
+            <div class="confidence-tag" id="result-confidence">95% Confidence</div>
+          </div>
+
+          <!-- Translation Bar -->
+          <div class="result-translate-bar">
+            <div class="translate-bar-left">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              <span>Translate:</span>
+            </div>
+            <div class="translate-bar-right">
+              <select id="popup-lang-select" class="popup-lang-select">
+                <option value="en">🇺🇸 English (Original)</option>
+                <option value="ms">🇲🇾 Bahasa Melayu</option>
+                <option value="zh-CN">🇨🇳 简体中文 (Chinese)</option>
+                <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+                <option value="id">🇮🇩 Bahasa Indonesia</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="ar">🇸🇦 العربية</option>
+                <option value="hi">🇮🇳 हिन्दी</option>
+                <option value="fr">🇫🇷 Français</option>
+              </select>
+              <span id="popup-translate-spinner" class="popup-translate-spinner" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="result-section">
+            <div class="section-title" id="popup-why-title">Clinical Synthesis & Evidence</div>
+            <div class="explanation-box" id="result-explanation"></div>
+          </div>
+
+          <div class="result-section">
+            <div class="section-title" id="popup-where-title">Authoritative Health Registries</div>
+            <div class="sources-list" id="result-sources"></div>
+          </div>
+
+          <div class="result-meta-footer">
+            <div class="meta-item">
+              <span>Claim ID:</span> <strong id="result-claim-id"></strong>
+            </div>
+            <div class="meta-item">
+              <span>Latency:</span> <strong id="result-latency"></strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Loading State Overlay -->
+      <div class="loading-overlay" id="loading-overlay" style="display:none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-title">Cross-Examining Clinical Registries...</div>
+        <div class="loading-desc" id="loading-desc">Pushed claim to n8n webhook and checking WHO, CDC, FDA & MOH databases.</div>
+      </div>
+    </main>
+
+    <!-- Settings Drawer Modal -->
+    <div class="modal-overlay" id="modal-settings" style="display:none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>n8n Engine Settings</h3>
+          <button class="btn-close-modal" id="btn-close-settings">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="cfg-webhook-url">n8n Production Webhook URL:</label>
+            <input type="url" id="cfg-webhook-url" />
+            <span class="field-hint">Receives the claim payload with mode, message, and claim_id.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="cfg-callback-url">Local / Callback Server URL:</label>
+            <input type="url" id="cfg-callback-url" />
+            <span class="field-hint">Default: http://localhost:3000 (polls /api/n8n-latest for async results).</span>
+          </div>
+
+          <div class="test-connection-box">
+            <button id="btn-test-connection" class="btn-subtle">
+              <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              <span>Test Webhook Connection</span>
+            </button>
+            <div class="connection-status" id="connection-status"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-save-settings" class="btn-primary">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Drawer Modal -->
+    <div class="modal-overlay" id="modal-history" style="display:none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Recent Verifications</h3>
+          <button class="btn-close-modal" id="btn-close-history">&times;</button>
+        </div>
+        <div class="modal-body history-body" id="history-items-container">
+          <!-- Populated dynamically -->
+        </div>
+        <div class="modal-footer">
+          <button id="btn-clear-history" class="btn-subtle" style="color:#be123c;">Clear History</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

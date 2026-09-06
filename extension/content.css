@@ -1,0 +1,489 @@
+/* MediProof In-Page Content Script Styles */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+/* Isolated container for selection pill and dock */
+#mediproof-root {
+  position: fixed;
+  z-index: 2147483647; /* Maximum z-index to stay above web content */
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color: #17181c;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+#mediproof-root * {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* 1. Floating Selection Pill */
+.mediproof-selection-pill {
+  position: absolute;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #994d55;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 18px rgba(153, 77, 85, 0.4), 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease;
+  transform: scale(0.95) translateY(4px);
+  opacity: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  animation: mediproof-pill-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.mediproof-selection-pill:hover {
+  background: #833e46;
+  transform: scale(1.02) translateY(0);
+}
+
+.mediproof-selection-pill svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
+@keyframes mediproof-pill-in {
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 2. In-Page Sliding Verdict Dock */
+.mediproof-dock-panel {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  width: 410px;
+  max-width: calc(100vw - 36px);
+  max-height: calc(100vh - 32px);
+  pointer-events: auto;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 16px 40px -6px rgba(18, 20, 24, 0.18), 0 4px 14px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(153, 77, 85, 0.18);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(440px);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  opacity: 0;
+}
+
+.mediproof-dock-panel.mediproof-dock-open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Dock Header */
+.mediproof-dock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 18px;
+  background: #fbf0f1;
+  border-bottom: 1px solid rgba(153, 77, 85, 0.15);
+}
+
+.mediproof-brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.mediproof-brand-icon {
+  width: 26px;
+  height: 26px;
+  background: #994d55;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.mediproof-brand-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: #fff;
+}
+
+.mediproof-brand-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #994d55;
+  letter-spacing: -0.2px;
+}
+
+.mediproof-brand-subtitle {
+  font-size: 10px;
+  color: #575a68;
+  font-weight: 600;
+  margin-left: 4px;
+  padding: 2px 6px;
+  background: rgba(45, 157, 104, 0.12);
+  color: #2d9d68;
+  border-radius: 4px;
+}
+
+.mediproof-dock-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mediproof-icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  color: #575a68;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.mediproof-icon-btn:hover {
+  background: rgba(153, 77, 85, 0.12);
+  color: #994d55;
+}
+
+.mediproof-icon-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+}
+
+/* Dock Content */
+.mediproof-dock-body {
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #ffffff;
+  max-height: calc(100vh - 110px);
+}
+
+/* Claim Quote Box */
+.mediproof-claim-quote {
+  background: #f8f9fc;
+  border-left: 4px solid #994d55;
+  padding: 10px 14px;
+  border-radius: 0 10px 10px 0;
+  font-size: 12.5px;
+  color: #2d3039;
+  font-style: italic;
+  line-height: 1.45;
+  position: relative;
+  word-break: break-word;
+}
+
+.mediproof-claim-meta {
+  font-size: 10.5px;
+  color: #8b8f9e;
+  font-weight: 600;
+  font-style: normal;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Loading State */
+.mediproof-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  gap: 14px;
+}
+
+.mediproof-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3.5px solid rgba(153, 77, 85, 0.15);
+  border-top-color: #994d55;
+  border-radius: 50%;
+  animation: mediproof-spin 0.85s linear infinite;
+}
+
+@keyframes mediproof-spin {
+  to { transform: rotate(360deg); }
+}
+
+.mediproof-loading-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #17181c;
+}
+
+.mediproof-loading-sub {
+  font-size: 11.5px;
+  color: #8b8f9e;
+  max-width: 280px;
+}
+
+/* Verdict Badges & Cards */
+.mediproof-verdict-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-width: 1.5px;
+  border-style: solid;
+}
+
+.mediproof-verdict-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.mediproof-confidence-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Verdict Variants */
+.mediproof-verdict-true {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+.mediproof-verdict-true .mediproof-confidence-badge {
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.mediproof-verdict-false {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #9f1239;
+}
+.mediproof-verdict-false .mediproof-confidence-badge {
+  color: #be123c;
+  border: 1px solid #fecdd3;
+}
+
+.mediproof-verdict-misleading {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+.mediproof-verdict-misleading .mediproof-confidence-badge {
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.mediproof-verdict-unverified {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  color: #3730a3;
+}
+.mediproof-verdict-unverified .mediproof-confidence-badge {
+  color: #4f46e5;
+  border: 1px solid #c7d2fe;
+}
+
+/* Translation Bar */
+.mediproof-translate-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #fbf0f1;
+  border-radius: 10px;
+  border: 1px solid rgba(153, 77, 85, 0.2);
+}
+
+.mediproof-translate-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #994d55;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.mediproof-translate-left svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+.mediproof-translate-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mediproof-lang-select {
+  background: #ffffff;
+  border: 1.5px solid rgba(153, 77, 85, 0.25);
+  border-radius: 7px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #17181c;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.mediproof-lang-select:focus {
+  border-color: #994d55;
+}
+
+.mediproof-translate-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #994d55;
+  font-weight: 600;
+}
+
+.mediproof-translate-spinner svg {
+  width: 12px;
+  height: 12px;
+  animation: mediproof-spin 0.8s linear infinite;
+}
+
+/* Explanation Card */
+.mediproof-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #8b8f9e;
+  margin-bottom: 5px;
+}
+
+.mediproof-explanation-text {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #242731;
+  background: #f8f9fc;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: opacity 0.2s ease;
+}
+
+/* Sources Pills */
+.mediproof-sources-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.mediproof-source-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: #ffffff;
+  border: 1px solid rgba(153, 77, 85, 0.2);
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #994d55;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.mediproof-source-pill:hover {
+  background: #fbf0f1;
+  border-color: #994d55;
+}
+
+.mediproof-source-tag {
+  font-size: 9.5px;
+  font-weight: 800;
+  background: #994d55;
+  color: #ffffff;
+  padding: 1.5px 5px;
+  border-radius: 4px;
+}
+
+/* Footer / Meta */
+.mediproof-dock-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 11px;
+  color: #8b8f9e;
+}
+
+.mediproof-sdg-tag {
+  color: #2d9d68;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 3. YouTube Injected Button */
+.mediproof-yt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #994d55 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 18px !important;
+  padding: 0 14px !important;
+  height: 36px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  margin-right: 8px !important;
+  transition: transform 0.15s ease, background 0.15s ease !important;
+  vertical-align: middle !important;
+}
+
+.mediproof-yt-btn:hover {
+  background: #833e46 !important;
+  transform: scale(1.02) !important;
+}
+
+.mediproof-yt-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+}
