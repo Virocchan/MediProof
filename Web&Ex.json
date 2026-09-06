@@ -1,0 +1,623 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d1cf9183-9b06-4d0a-9f16-2c30670a1139",
+                    "leftValue": "={{ $json.body.mode }}",
+                    "rightValue": "youtube",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "youtube"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.mode }}",
+                    "rightValue": "Text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2fce57e6-fc00-4c88-bb50-f403af7fe141"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b172ca22-855f-4ed7-949f-642a9a543d5f",
+                    "leftValue": "={{ $json.body.mode }}",
+                    "rightValue": "Voice",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Voice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3f700982-16d5-4da4-a929-bac93447982f",
+                    "leftValue": "={{ $json.body.mode }}",
+                    "rightValue": "Photo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Photo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -256,
+        240
+      ],
+      "id": "5af13441-fc7b-42d4-97cc-a6e67e3641b2",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a public health fact-checker for the Sedia Health Guard (SDG 3).\nAnalyze the incoming health claim or message.\n\nRespond strictly in this format:\n[VERDICT]: (True, False, Misleading, or Unverified)\n[EXPLANATION]: (Brief 2-sentence medical context)\n[SOURCE]: (Cite WHO, CDC, or MOH if known)"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        192,
+        208
+      ],
+      "id": "f1198df9-e70d-42a9-9ca9-e820209f52c5",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        400,
+        352
+      ],
+      "id": "6affa717-f995-4335-8bb0-d8b36c1d3a9b",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "cQTXVk0L8Ry14kzG",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f3d15f5b-68fa-44c8-85f5-dc442f3ee951",
+              "name": "file_id",
+              "value": "={{ $json.body.photo[0].file_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        480
+      ],
+      "id": "df641829-549f-4616-84b9-93e135e8110b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        928
+      ],
+      "id": "72e3817b-4878-48aa-bc14-3752a8becfdd",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZgUZKVT7EqsYR1n3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are 'Sedia Health Guard', an expert public health fact-checker. \nAnalyze the attached image. \n- If it is a health product or supplement label, verify its claims, ingredients, and FDA/MOH approval status. \n- If it is a medical infographic or poster, verify if the medical facts presented are accurate.\n\nFormat your answer strictly with:\n[VERDICT]: (e.g., True, False, Misleading, Unverified)\n[EXPLANATION]: (Brief explanation)\n[SOURCES]: (Provide 2-3 authoritative links such as the CDC, WHO, or MOH)",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        224,
+        720
+      ],
+      "id": "88a2a64b-f0b9-45e9-8570-d5838bfa737e",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are 'Sedia Health Guard', an expert public health fact-checker. \nAnalyze the following claim transcribed from a user's voice message and verify if it is medically accurate.\n\nClaim: {{ $json.text }}\n\nFormat your answer strictly with:\n[VERDICT]: (True, False, Misleading, Unverified)\n[EXPLANATION]: (Brief explanation)\n[SOURCES]: (Provide 1-2 authoritative links such as the CDC, WHO, or MOH)",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        560,
+        512
+      ],
+      "id": "be78b2ed-fa16-4cce-b37f-43aae0470075",
+      "name": "Basic LLM Chain2"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        656,
+        656
+      ],
+      "id": "e5f906af-17b6-4708-bf98-987242f59a63",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "cQTXVk0L8Ry14kzG",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "model",
+              "value": "whisper-large-v3-turbo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        384,
+        480
+      ],
+      "id": "93d1d98c-42f8-41f0-a30d-daa45a720c7f",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "WQrik89nq03Kwk2R",
+          "name": "Header Auth account"
+        },
+        "httpBearerAuth": {
+          "id": "CxKlYR9JhIRMTrjQ",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of $input.all()) {\n    if (item.binary && item.binary.data) {\n        item.binary.data.fileName = 'voice.ogg';\n    }\n}\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        416
+      ],
+      "id": "9f487b7b-06cd-4636-9062-570ddcff29b6",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are 'Sedia Health Guard', an expert public health fact-checker. \nAnalyze the health claims made in this YouTube video and verify if they are medically accurate. \n\nVideo Link: {{ $json.body.message }}\n\nFormat your answer strictly with:\n[VERDICT]: (True, False, Misleading, Unverified)\n[EXPLANATION]: (Brief explanation)\n[SOURCES]: (Provide 1-2 authoritative links such as the CDC, WHO, or MOH). All URLs must be completely plain text. If you are generating a Google search link, ensure the query string is clean (e.g., use q=Mayo+Clinic, NOT q=**Mayo+Clinic**).",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -64,
+        -48
+      ],
+      "id": "bbd73566-4aa6-4527-8ca0-1b78ee16ccee",
+      "name": "Basic LLM Chain3"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -16,
+        112
+      ],
+      "id": "77f87318-c848-481d-886f-260dec6b8b8a",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZgUZKVT7EqsYR1n3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "6e567f04-b2ce-4b29-a284-2e8b1bbf94e3",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -432,
+        272
+      ],
+      "id": "1f9215ee-ad21-4b74-8674-4961c9bf2890",
+      "name": "Webhook",
+      "webhookId": "6e567f04-b2ce-4b29-a284-2e8b1bbf94e3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://host.docker.internal:3000/api/n8n-callback",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "response",
+              "value": "={{ $json.text }}"
+            },
+            {
+              "name": "claim_id",
+              "value": "={{ $('Webhook').first().json.body.claim_id\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        864,
+        304
+      ],
+      "id": "c78f0323-8509-4b4e-a2d3-43cedea404b6",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.file_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        48,
+        656
+      ],
+      "id": "4b5b93c9-f546-48d5-bf7c-ff8957bf1282",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Webhook').first().json.body.audio_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16,
+        368
+      ],
+      "id": "451eb236-f2b4-46f9-a637-87d1ece29fe9",
+      "name": "HTTP Request3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1c5ac528-b418-4d3f-8fb8-ce0fc2c3d3f8",
+  "meta": {
+    "instanceId": "4aef290c9cf731f7b8501cf00c96691092a63eac289d1e6dd8f2f5b4640b18fd"
+  },
+  "id": "8T84Huj5dVFF9NqX",
+  "tags": []
+}
