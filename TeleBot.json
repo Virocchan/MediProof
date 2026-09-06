@@ -1,0 +1,999 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b3e7d45a-6871-4502-b5e6-faad473c1aaf",
+      "name": "Telegram Trigger",
+      "webhookId": "df044f71-2790-4d1f-84c6-8970c2d07df9",
+      "credentials": {
+        "telegramApi": {
+          "id": "vjhPHwbUF2qgLCKZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d1cf9183-9b06-4d0a-9f16-2c30670a1139",
+                    "leftValue": "={{ $json.message?.text }}",
+                    "rightValue": "youtube.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "youtube"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message?.text || $json.message?.caption }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "2fce57e6-fc00-4c88-bb50-f403af7fe141"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b172ca22-855f-4ed7-949f-642a9a543d5f",
+                    "leftValue": "={{ $json.message?.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Voice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3f700982-16d5-4da4-a929-bac93447982f",
+                    "leftValue": "={{ $json.message?.photo }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "array",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Photo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "7fe4d961-3a1a-4cb3-8f12-a58773b78bfc",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a public health fact-checker for the Sedia Health Guard (SDG 3).\nAnalyze the incoming health claim or message.\n\nRespond strictly in this format:\n[VERDICT]: (True, False, Misleading, or Unverified)\n[EXPLANATION]: (Brief 2-sentence medical context)\n[SOURCE]: (Cite WHO, CDC, or MOH if known) (Provide 1-2 authoritative sources in Markdown format, e.g., [CDC Fact Sheet](https://www.cdc.gov/example)"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        496,
+        16
+      ],
+      "id": "3e5903d8-3303-46aa-bdce-4c83b079b10b",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        576,
+        192
+      ],
+      "id": "a155d922-f4be-493b-90d7-e3eb5a4e7f43",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "cQTXVk0L8Ry14kzG",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Malay",
+                    "additionalFields": {
+                      "callback_data": "translate_ms"
+                    }
+                  },
+                  {
+                    "text": "Chinese",
+                    "additionalFields": {
+                      "callback_data": "translate_zh"
+                    }
+                  },
+                  {
+                    "text": "Tamil",
+                    "additionalFields": {
+                      "callback_data": "translate_ta"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2016,
+        128
+      ],
+      "id": "f4a2475e-d965-4baa-a579-04850b04b979",
+      "name": "Send a text message",
+      "webhookId": "f2191dcc-71fb-4f3a-aae6-89d131cac69f",
+      "credentials": {
+        "telegramApi": {
+          "id": "vjhPHwbUF2qgLCKZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f3d15f5b-68fa-44c8-85f5-dc442f3ee951",
+              "name": "file_id",
+              "value": "={{ $json.message.photo.slice(-1)[0].file_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        304
+      ],
+      "id": "1ae1f73b-4ff9-4f60-bf48-e87ae8a74a05",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        496,
+        368
+      ],
+      "id": "e8e8b92e-ce13-4cf3-98f5-8a4f2b94c7da",
+      "name": "Get a file",
+      "webhookId": "1cfafe9b-eaad-4bc2-8868-c18aee611d89",
+      "credentials": {
+        "telegramApi": {
+          "id": "vjhPHwbUF2qgLCKZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        736,
+        592
+      ],
+      "id": "ccc46680-a129-43a2-aa10-7245f4508b6b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZgUZKVT7EqsYR1n3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are 'Sedia Health Guard', an expert public health fact-checker. \nAnalyze the attached image. \n- If it is a health product or supplement label, verify its claims, ingredients, and FDA/MOH approval status. \n- If it is a medical infographic or poster, verify if the medical facts presented are accurate.\n\nFormat your answer strictly with:\n[VERDICT]: (e.g., True, False, Misleading, Unverified)\n[EXPLANATION]: (Brief explanation)\n[SOURCES]: (Provide 2-3 authoritative links such as the CDC, WHO, or MOH) (Provide 1-2 authoritative sources in Markdown format, e.g., [CDC Fact Sheet](https://www.cdc.gov/example)",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        704,
+        368
+      ],
+      "id": "7b7df30b-a9bd-4181-827e-856737ca631d",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        304,
+        -176
+      ],
+      "id": "1da4d255-230b-4fe7-9a83-b6f0fce9ff82",
+      "name": "Get a file1",
+      "webhookId": "6d2c8fa2-4a12-46f4-89f0-9430d1d5471e",
+      "credentials": {
+        "telegramApi": {
+          "id": "vjhPHwbUF2qgLCKZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are 'Sedia Health Guard', an expert public health fact-checker. \nAnalyze the following claim transcribed from a user's voice message and verify if it is medically accurate.\n\nClaim: {{ $json.text }}\n\nFormat your answer strictly with:\n[VERDICT]: (True, False, Misleading, Unverified)\n[EXPLANATION]: (Brief explanation)\n[SOURCES]: Provide 1-2 authoritative sources in Markdown format, e.g., [CDC Fact Sheet](https://www.cdc.gov/example such as the CDC, WHO, or MOH)",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        800,
+        -256
+      ],
+      "id": "80fc0136-64bb-4efa-a75f-b8dd168a292d",
+      "name": "Basic LLM Chain2"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        848,
+        -112
+      ],
+      "id": "3ddba42e-33dd-46d3-81d5-ca025b45e852",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "cQTXVk0L8Ry14kzG",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "model",
+              "value": "whisper-large-v3-turbo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        576,
+        -256
+      ],
+      "id": "e2daf4cd-a2bc-441a-a00d-61fd2dbc471b",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "WQrik89nq03Kwk2R",
+          "name": "Header Auth account"
+        },
+        "httpBearerAuth": {
+          "id": "CxKlYR9JhIRMTrjQ",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of $input.all()) {\n    if (item.binary && item.binary.data) {\n        item.binary.data.fileName = 'voice.ogg';\n    }\n}\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -336
+      ],
+      "id": "9aa7cb99-f4ed-4c93-9ad5-ee8f2a23edae",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are 'Sedia Health Guard', an expert public health fact-checker. \nAnalyze the health claims made in this YouTube video and verify if they are medically accurate. \n\nVideo Link: {{ $json.message.text }}\n\nFormat your answer strictly with:\n[VERDICT]: (True, False, Misleading, Unverified)\n[EXPLANATION]: (Brief explanation)\n[SOURCES]: (Provide 1-2 authoritative links such as the CDC, WHO, or MOH) (Provide 1-2 authoritative sources in Markdown format, e.g., [CDC Fact Sheet](https://www.cdc.gov/example)",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        768,
+        144
+      ],
+      "id": "d6a925e4-277f-4a59-a3d6-0f6f989dbf64",
+      "name": "Basic LLM Chain3"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1088,
+        656
+      ],
+      "id": "9303f2a1-7dcf-4c92-b7e1-ec7946974e14",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZgUZKVT7EqsYR1n3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.callback_query.data }}",
+                    "rightValue": "translate_ms",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "ad941ac1-058c-4fb3-90b9-952113c7d6c4"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Malay"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "414926be-cfde-4c41-98e8-afc6f0a0f5b9",
+                    "leftValue": "={{ $json.callback_query.data }}",
+                    "rightValue": "translate_zh",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Chinese"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "194921f9-d3d9-4980-87f7-4ad19d4039c9",
+                    "leftValue": "={{ $json.callback_query.data }}",
+                    "rightValue": "translate_ta",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Tamil"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        944
+      ],
+      "id": "811c856f-a3de-4815-8d3a-5092b62b375d",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Translate this medical fact-check to professional Malay: \n\n{{ $json.callback_query.message.text }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1456,
+        656
+      ],
+      "id": "2893b334-c8cc-415f-abad-8938fb034603",
+      "name": "Basic LLM Chain4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Translate this medical fact-check to professional Tamil: \n\n{{ $json.callback_query.message.text }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1552,
+        1216
+      ],
+      "id": "a39a570d-3b1c-47b4-855a-66a24d376017",
+      "name": "Basic LLM Chain5"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Translate this medical fact-check to professional Chinese: \n\n{{ $json.callback_query.message.text }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1504,
+        944
+      ],
+      "id": "363f4f12-5ec1-4ea0-b8c8-b5a772169758",
+      "name": "Basic LLM Chain6"
+    },
+    {
+      "parameters": {
+        "operation": "editMessageText",
+        "chatId": "={{ $('Telegram Trigger').first().json.callback_query.message.chat.id }}",
+        "messageId": "={{ $('Telegram Trigger').first().json.callback_query.message.message_id }}",
+        "replyMarkup": "=none",
+        "text": "={{ $json.text }}",
+        "forceReply": {},
+        "replyKeyboardOptions": {},
+        "replyKeyboardRemove": {},
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2016,
+        672
+      ],
+      "id": "e9088687-757e-406a-80a6-08af5a80137b",
+      "name": "Edit a text message",
+      "webhookId": "b06e0bfb-64e2-4077-a326-dae1225c920f",
+      "credentials": {
+        "telegramApi": {
+          "id": "vjhPHwbUF2qgLCKZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "=openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        848
+      ],
+      "id": "915be5c5-a5cc-4a99-84c1-cfa8ad153824",
+      "name": "Groq Chat Model2",
+      "credentials": {
+        "groqApi": {
+          "id": "RrlfNgXQTCalXT9B",
+          "name": "Groq account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "=openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        1120
+      ],
+      "id": "b7ae57e9-41c7-4af3-ad04-638fb72412e8",
+      "name": "Groq Chat Model3",
+      "credentials": {
+        "groqApi": {
+          "id": "RrlfNgXQTCalXT9B",
+          "name": "Groq account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "=openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        1360
+      ],
+      "id": "c3202e89-9ea1-4956-97b2-87e777e6aa56",
+      "name": "Groq Chat Model4",
+      "credentials": {
+        "groqApi": {
+          "id": "RrlfNgXQTCalXT9B",
+          "name": "Groq account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain2": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain3": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Basic LLM Chain6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Basic LLM Chain5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain4": {
+      "main": [
+        [
+          {
+            "node": "Edit a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain6": {
+      "main": [
+        [
+          {
+            "node": "Edit a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain5": {
+      "main": [
+        [
+          {
+            "node": "Edit a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        []
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain4",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain6",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain5",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "179e9b72-c7f6-434e-90ad-e915be53e25c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4aef290c9cf731f7b8501cf00c96691092a63eac289d1e6dd8f2f5b4640b18fd"
+  },
+  "id": "pA5u6sbWPrpahASh",
+  "tags": []
+}
